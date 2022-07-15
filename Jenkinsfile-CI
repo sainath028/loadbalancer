@@ -5,31 +5,38 @@ pipeline {
 
         stage('git clone') {
             steps {
-                // git branch: 'master', url: "https://github.com/sainath028/vprofile-repo.git"  
+                git branch: 'main', url: "https://github.com/sainath028/loadbalancer.git" 
                 sh "echo git"
             }
         }
         stage('Docker login'){
             steps{
-                sh 'aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/e7w1y6p1'
+                sh 'aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 637165239391.dkr.ecr.us-east-2.amazonaws.com'
             }
         }
         stage('Docker build') {
             steps{
-                sh "docker build -t demo ."
+                sh "docker build -t hello-cloud ."
             }
         }        
         
         stage('Docker tag') {
             steps{
-                sh "docker tag demo:latest public.ecr.aws/e7w1y6p1/demo:$BUILD_NUMBER"
+                sh "docker tag hello-cloud:latest 637165239391.dkr.ecr.us-east-2.amazonaws.com/hello-cloud:$BUILD_NUMBER"
             }
         }  
 
         stage('Docker push') {
             steps{
-                sh "docker push public.ecr.aws/e7w1y6p1/demo:$BUILD_NUMBER"
+                sh "docker push 637165239391.dkr.ecr.us-east-2.amazonaws.com/hello-cloud:$BUILD_NUMBER"
             }
         }  
+        stage('Docker ansible') {
+            steps{
+                sh "chmod 400 windows.pem"
+                sh "ansible-playbook -i inventory cd.yaml"
+            }
+        }  
+
      }
  }
