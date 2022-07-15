@@ -1,0 +1,1 @@
+web ansible_host=52.90.149.167 ansible_ssh_private_key_file=windows.pem
