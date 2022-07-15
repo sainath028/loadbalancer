@@ -1,36 +1,3 @@
-variable "type" {
-    default = "t2.micro"
-}
-// Environment name, used as prefix to name resources.
-variable "environment" {
-  default = "dev"
-}
-
-// The allocated storage in gigabytes.
-variable "rds_allocated_storage" {
-  default = "5"
-}
-
-// The instance type of the RDS instance.
-variable "rds_instance_class" {
-  default = "db.t2.micro"
-}
-
-// Specifies if the RDS instance is multi-AZ.
-variable "rds_multi_az" {
-  default = "false"
-}
-
-// Username for the administrator DB user.
-variable "mssql_admin_username" {
-  default = "admin"
-}
-
-// Password for the administrator DB user.
-variable "mssql_admin_password" {
-  default = "admin123"
-}
-
 locals{
     environment ="dev"
     cidr_block_private = ["10.0.1.0/26","10.0.2.0/26"]
@@ -321,10 +288,6 @@ resource "aws_instance" "webserver" {
     sudo amazon-linux-extras install docker -y
     sudo service docker start
     sudo usermod -a -G docker ec2-user
-    sudo curl -L https://github.com/docker/compose/releases/download/1.25.4/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
-    sudo chmod +x /usr/local/bin/docker-compose
-    sudo yum install httpd -y
-    sudo systemctl start httpd
   EOF
   tags = {
     Name = "webserver"
